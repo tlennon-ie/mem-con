@@ -1,0 +1,94 @@
+# team.yaml — customize this for your organization
+# Run bash scripts/scaffold.sh after editing to regenerate memory/ structure
+
+organization:
+  name: "Your Organization"
+  team_repo: "https://github.com/your-org/mem-con.git"
+
+tools:
+  # Set to null for tools you don't use — drives populate-context behavior
+  project_tracking: null   # jira | linear | github-issues | asana | notion
+  meetings: null           # sana | otter | notion | fireflies | zoom
+  analytics: null          # amplitude | mixpanel | ga4 | looker | snowflake
+  docs: null               # confluence | notion | google-docs | sharepoint
+  code: null               # github | gitlab | bitbucket
+  communication: null      # slack | teams | discord
+  design: null             # figma | zeplin | miro
+  crm: null                # salesforce | hubspot | pipedrive
+
+source_templates:
+  # Shared source definitions any team member can reference in user-profile.yaml
+  # Uncomment and fill in to create reusable source configs:
+  # - id: team-jira-sprint
+  #   type: jira-jql
+  #   mcp: jira
+  #   config:
+  #     jql: "project = ENG AND sprint in openSprints()"
+  #   feeds_into: project.md
+  # - id: team-slack-standup
+  #   type: slack-channel
+  #   mcp: slack
+  #   config:
+  #     channel: "#standup"
+  #   feeds_into: project.md
+
+teams:
+  - slug: engineering
+    name: Engineering
+    areas:
+      - { slug: platform,  name: "Platform & Infrastructure" }
+      - { slug: frontend,  name: Frontend }
+      - { slug: backend,   name: "Backend & API" }
+      - { slug: devops,    name: "DevOps & Reliability" }
+
+  - slug: product
+    name: Product
+    areas:
+      - { slug: discovery, name: "Discovery & Research" }
+      - { slug: delivery,  name: "Delivery & Roadmap" }
+      - { slug: analytics, name: "Analytics & Insights" }
+
+  - slug: design
+    name: "Design & UX"
+    areas:
+      - { slug: ux-research,    name: "UX Research" }
+      - { slug: product-design, name: "Product Design" }
+      - { slug: design-system,  name: "Design System" }
+
+  - slug: marketing
+    name: Marketing
+    areas:
+      - { slug: content,    name: "Content & SEO" }
+      - { slug: demand-gen, name: "Demand Generation" }
+      - { slug: brand,      name: "Brand & Creative" }
+
+  - slug: sales
+    name: Sales
+    areas:
+      - { slug: enterprise, name: "Enterprise Sales" }
+      - { slug: smb,        name: "SMB & Self-Serve" }
+
+  - slug: customer-success
+    name: "Customer Success"
+    areas:
+      - { slug: onboarding, name: "Customer Onboarding" }
+      - { slug: support,    name: "Support & Live Ops" }
+      - { slug: renewals,   name: "Renewals & Expansion" }
+
+  - slug: executive
+    name: "Executive & Leadership"
+    areas:
+      - { slug: strategy, name: "Strategy & OKRs" }
+      - { slug: finance,  name: "Finance & Operations" }
+
+  - slug: hr
+    name: "HR & People"
+    areas:
+      - { slug: recruiting, name: "Recruiting & Hiring" }
+      - { slug: culture,    name: "Culture & Engagement" }
+
+  - slug: tech-writing
+    name: "Technical Writing"
+    areas:
+      - { slug: docs,          name: Documentation }
+      - { slug: release-notes, name: "Release Notes" }

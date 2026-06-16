@@ -1,0 +1,138 @@
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="mem-con: your project, AI conversations, and connected MCPs feed a session; updates are approved and merged via PR into shared team memory.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#0d1117"/>
+    </linearGradient>
+    <radialGradient id="topGlow" cx="50%" cy="10%" r="60%">
+      <stop offset="0" stop-color="#1b2747" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#0b1020" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orbGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#7ee7ec" stop-opacity="0.9"/>
+      <stop offset="0.5" stop-color="#56d4dd" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#56d4dd" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="4" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#56d4dd"/>
+    </marker>
+    <marker id="arrF" markerWidth="8" markerHeight="8" refX="3.5" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#6f7da0"/>
+    </marker>
+    <style>
+      text { font-family: ui-monospace,'JetBrains Mono','SF Mono','Cascadia Code',Consolas,monospace; fill:#e9eefb; }
+      .sans { font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
+      .mut  { fill:#7d89a6; }
+      .flow { stroke-dasharray:5 9; animation:flow 1s linear infinite; }
+      @keyframes flow { to { stroke-dashoffset:-14; } }
+      .loop { stroke-dasharray:4 12; animation:loop 2.2s linear infinite; }
+      @keyframes loop { to { stroke-dashoffset:-32; } }
+      .feed { stroke-dasharray:4 7; animation:feed 1.4s linear infinite; }
+      @keyframes feed { to { stroke-dashoffset:-22; } }
+      @media (prefers-reduced-motion: reduce){ * { animation:none !important; } }
+    </style>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect width="1280" height="320" fill="url(#topGlow)"/>
+
+  <!-- title -->
+  <text x="640" y="58" text-anchor="middle" font-size="36" font-weight="700" fill="#eef2fc">mem<tspan fill="#56d4dd">·</tspan>con</text>
+  <text x="640" y="84" text-anchor="middle" class="sans mut" font-size="14">your project, your AI conversations, your MCPs — captured as shared team memory</text>
+
+  <!-- ===== SOURCES YOU BRING ===== -->
+  <text x="640" y="120" text-anchor="middle" font-size="11" fill="#56d4dd" letter-spacing="2">WHAT YOU BRING TO A SESSION</text>
+
+  <!-- chip 1: your project (amber, folder) -->
+  <g>
+    <rect x="190" y="134" width="290" height="58" rx="13" fill="#1b1607" stroke="#4d3c12"/>
+    <g transform="translate(210,150)" fill="none" stroke="#e3b341" stroke-width="1.8">
+      <path d="M0,5 h8 l2.5,3 h11 a2,2 0 0 1 2,2 v9 a2,2 0 0 1 -2,2 h-21.5 a2,2 0 0 1 -2,-2 V7 a2,2 0 0 1 2,-2 Z"/>
+    </g>
+    <text x="250" y="160" font-size="14" fill="#f0e6c8">your project</text>
+    <text x="250" y="179" font-size="11" fill="#bda566">code · docs · tickets</text>
+  </g>
+  <!-- chip 2: AI conversations (cyan, bubble) -->
+  <g>
+    <rect x="495" y="134" width="290" height="58" rx="13" fill="#0c1d20" stroke="#1f5560"/>
+    <g transform="translate(515,150)" fill="none" stroke="#56d4dd" stroke-width="1.8">
+      <path d="M2,2 h20 a2,2 0 0 1 2,2 v9 a2,2 0 0 1 -2,2 H11 l-5,4 v-4 H4 a2,2 0 0 1 -2,-2 V4 a2,2 0 0 1 2,-2 Z"/>
+    </g>
+    <text x="555" y="160" font-size="14" fill="#d4f4f6">your AI conversations</text>
+    <text x="555" y="179" font-size="11" fill="#6fb3ba">decisions + reasoning</text>
+  </g>
+  <!-- chip 3: your MCPs (green, hub) -->
+  <g>
+    <rect x="800" y="134" width="290" height="58" rx="13" fill="#0c1d12" stroke="#1f5b32"/>
+    <g transform="translate(816,150)" stroke="#3fb950" stroke-width="1.7" fill="none">
+      <line x1="13" y1="13" x2="4" y2="4"/><line x1="13" y1="13" x2="22" y2="4"/><line x1="13" y1="13" x2="13" y2="24"/>
+      <circle cx="13" cy="13" r="3.2" fill="#3fb950" stroke="none"/>
+      <circle cx="4" cy="4" r="2.4" fill="#0d1117"/><circle cx="22" cy="4" r="2.4" fill="#0d1117"/><circle cx="13" cy="24" r="2.4" fill="#0d1117"/>
+    </g>
+    <text x="856" y="160" font-size="14" fill="#cdf0d6">your MCPs</text>
+    <text x="856" y="179" font-size="11" fill="#6fbf85">Slack · Jira · Sana</text>
+  </g>
+
+  <!-- funnel: sources feed into the session -->
+  <path class="feed" d="M 335,192 C 335,210 493,205 493,228" fill="none" stroke="#6f7da0" stroke-width="1.6"/>
+  <path class="feed" d="M 640,192 C 640,212 493,210 493,228" fill="none" stroke="#6f7da0" stroke-width="1.6"/>
+  <path class="feed" d="M 945,192 C 945,210 493,205 493,228" fill="none" stroke="#6f7da0" stroke-width="1.6"/>
+  <line class="feed" x1="493" y1="226" x2="493" y2="236" stroke="#6f7da0" stroke-width="1.6" marker-end="url(#arrF)"/>
+
+  <!-- ===== THE SESSION LOOP ===== -->
+  <!-- track + orbiting pulse -->
+  <path class="loop" d="M 200,290 H 1079 C 1170,290 1170,430 1010,430 H 270 C 110,430 110,290 200,290"
+        fill="none" stroke="#56d4dd" stroke-width="2" opacity="0.4"/>
+  <g>
+    <circle r="19" fill="url(#orbGlow)"/>
+    <circle r="5" fill="#aef3f6"/>
+    <animateMotion dur="13s" repeatCount="indefinite" rotate="auto"
+      path="M 200,290 H 1079 C 1170,290 1170,430 1010,430 H 270 C 110,430 110,290 200,290"/>
+  </g>
+
+  <!-- connectors -->
+  <line class="flow" x1="312" y1="290" x2="375" y2="290" stroke="#56d4dd" stroke-width="2" marker-end="url(#arr)"/>
+  <line class="flow" x1="605" y1="290" x2="668" y2="290" stroke="#56d4dd" stroke-width="2" marker-end="url(#arr)"/>
+  <line class="flow" x1="898" y1="290" x2="961" y2="290" stroke="#56d4dd" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- step 1 — read -->
+  <g>
+    <rect x="90" y="240" width="220" height="100" rx="14" fill="#131b2c" stroke="#2b3a5e"/>
+    <circle cx="200" cy="266" r="14" fill="#0f3338"/>
+    <text x="200" y="271" text-anchor="middle" font-size="13" font-weight="700" fill="#56d4dd">1</text>
+    <text x="200" y="304" text-anchor="middle" font-size="15" fill="#eef2fc">read context</text>
+    <text x="200" y="324" text-anchor="middle" font-size="11" class="mut">shared/ + your area/</text>
+  </g>
+  <!-- step 2 — work (the rich one) -->
+  <g>
+    <rect x="383" y="240" width="220" height="100" rx="14" fill="#11202c" stroke="#2f6470"/>
+    <circle cx="493" cy="266" r="14" fill="#0f3338"/>
+    <text x="493" y="271" text-anchor="middle" font-size="13" font-weight="700" fill="#56d4dd">2</text>
+    <text x="493" y="304" text-anchor="middle" font-size="15" fill="#eef2fc">work on your project</text>
+    <text x="493" y="324" text-anchor="middle" font-size="11" class="mut">uses your sources</text>
+  </g>
+  <!-- step 3 — approve -->
+  <g>
+    <rect x="676" y="240" width="220" height="100" rx="14" fill="#131b2c" stroke="#2b3a5e"/>
+    <circle cx="786" cy="266" r="14" fill="#10311c"/>
+    <text x="786" y="271" text-anchor="middle" font-size="13" font-weight="700" fill="#3fb950">3</text>
+    <text x="786" y="304" text-anchor="middle" font-size="15" fill="#eef2fc">approve updates</text>
+    <text x="786" y="324" text-anchor="middle" font-size="11" class="mut">agent proposes; you confirm</text>
+  </g>
+  <!-- step 4 — PR / merge -->
+  <g>
+    <rect x="969" y="240" width="220" height="100" rx="14" fill="#131b2c" stroke="#2b3a5e"/>
+    <circle cx="1079" cy="266" r="14" fill="#2a1d44"/>
+    <text x="1079" y="271" text-anchor="middle" font-size="13" font-weight="700" fill="#bc8cff">4</text>
+    <text x="1079" y="304" text-anchor="middle" font-size="15" fill="#eef2fc">PR opens → merge</text>
+    <text x="1079" y="324" text-anchor="middle" font-size="11" class="mut">shared with the whole team</text>
+  </g>
+
+  <!-- loop-back label -->
+  <text x="640" y="455" text-anchor="middle" font-size="13" fill="#56d4dd">↻  everyone's next session pulls this fresh context</text>
+
+  <!-- takeaway -->
+  <text x="640" y="540" text-anchor="middle" class="sans" font-size="15.5" fill="#cdd6ec">What you do on a project — the work, the AI conversations, the MCP data —</text>
+  <text x="640" y="566" text-anchor="middle" class="sans" font-size="15.5" fill="#cdd6ec">becomes <tspan fill="#7ee7ec" font-weight="600">shared team memory</tspan>, approved by you and merged via PR.</text>
+  <text x="640" y="612" text-anchor="middle" class="sans mut" font-size="12.5">the repo is the single source of truth — no one pushes context straight to main</text>
+</svg>

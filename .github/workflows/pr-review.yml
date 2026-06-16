@@ -1,0 +1,183 @@
+name: PR Quality Review
+
+on:
+  pull_request:
+    paths:
+      - 'memory/**'
+      - 'skills/**'
+      - 'manifest.yaml'
+
+jobs:
+  structure:
+    name: Structure & Frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate frontmatter and pillar structure
+        run: |
+          python3 - << 'EOF'
+          import re, sys, pathlib
+          from datetime import date
+
+          REQUIRED_FIELDS = ["name:", "description:"]
+          REQUIRED_META   = ["type:", "pillar:", "last_updated:"]
+          VALID_TYPES     = {"user", "project", "feedback", "reference", "index"}
+          REQUIRED_FILES  = {"MEMORY.md", "user.md", "project.md", "feedback.md", "reference.md"}
+
+          errors   = []
+          warnings = []
+
+          # --- Frontmatter checks on all memory .md files ---
+          for f in pathlib.Path("memory").rglob("*.md"):
+            if f.name == "README.md":
+              continue
+            text = f.read_text(encoding="utf-8-sig")
+            match = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
+            if not match:
+              errors.append(f"{f}: missing frontmatter block")
+              continue
+            fm = match.group(1)
+            for field in REQUIRED_FIELDS:
+              if field not in fm:
+                errors.append(f"{f}: missing required field '{field}'")
+            for mf in REQUIRED_META:
+              if mf not in fm:
+                errors.append(f"{f}: missing metadata sub-field '{mf}'")
+            type_match = re.search(r'type:\s*(\S+)', fm)
+            if type_match and type_match.group(1) not in VALID_TYPES:
+              errors.append(f"{f}: invalid type '{type_match.group(1)}'")
+
+          # --- Pillar directory completeness ---
+          memory = pathlib.Path("memory")
+          for category in memory.iterdir():
+            if not category.is_dir() or category.name == "shared":
+              continue
+            for pillar in category.iterdir():
+              if not pillar.is_dir():
+                continue
+              files = {f.name for f in pillar.iterdir()}
+              missing = REQUIRED_FILES - files
+              if missing:
+                errors.append(f"{pillar}: missing required files: {sorted(missing)}")
+
+          # --- MEMORY.md line count ---
+          for f in pathlib.Path("memory").rglob("MEMORY.md"):  # rglob("MEMORY.md") already excludes README
+            lines = f.read_text(encoding="utf-8-sig").splitlines()
+            if len(lines) > 200:
+              warnings.append(f"{f}: {len(lines)} lines — keep under 200 to avoid context truncation")
+
+          for w in warnings:
+            print(f"WARNING: {w}")
+          if errors:
+            for e in errors:
+              print(f"ERROR: {e}")
+            sys.exit(1)
+          print("Structure checks passed.")
+          EOF
+
+  content-quality:
+    name: Content Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Why/How lines in feedback and project files
+        run: |
+          python3 - << 'EOF'
+          import pathlib, sys
+
+          warnings = []
+
+          for f in pathlib.Path("memory").rglob("*.md"):
+            if f.name in ("README.md",):
+              continue
+            if f.name not in ("feedback.md", "project.md"):
+              continue
+            text = f.read_text(encoding="utf-8-sig")
+            # Strip frontmatter before checking
+            import re
+            body = re.sub(r'^---\n.*?\n---\n', '', text, flags=re.DOTALL)
+            # Each heading-level entry should have Why and How to apply
+            entries = re.split(r'\n#{1,3} ', body)
+            for i, entry in enumerate(entries[1:], 1):
+              title = entry.split("\n")[0].strip()
+              if "**Why:**" not in entry and len(entry.strip()) > 50:
+                warnings.append(f"{f} — entry '{title[:40]}': missing **Why:** line")
+              if "**How to apply:**" not in entry and len(entry.strip()) > 50:
+                warnings.append(f"{f} — entry '{title[:40]}': missing **How to apply:** line")
+
+          if warnings:
+            print("Content quality warnings (non-blocking):")
+            for w in warnings:
+              print(f"  {w}")
+          else:
+            print("Content quality checks passed.")
+          EOF
+
+      - name: Check for deprecated Amplitude cohort IDs
+        run: |
+          python3 - << 'EOF'
+          import pathlib, re, sys
+
+          # Load banned cohort IDs from guardrails
+          guardrails = pathlib.Path("memory/shared/guardrails.md")
+          banned = set()
+          if guardrails.exists():
+            text = guardrails.read_text(encoding="utf-8-sig")
+            # Extract cohort IDs (pattern: cohort_XXXXXXXX or numeric IDs listed under banned section)
+            banned = set(re.findall(r'cohort[_-][A-Za-z0-9]+', text))
+
+          errors = []
+          for f in pathlib.Path("memory").rglob("reference.md"):  # rglob("reference.md") already excludes README
+            text = f.read_text(encoding="utf-8-sig")
+            for cohort_id in banned:
+              if cohort_id in text:
+                errors.append(f"{f}: references deprecated cohort ID '{cohort_id}'")
+
+          if errors:
+            for e in errors:
+              print(f"ERROR: {e}")
+            sys.exit(1)
+          print("Amplitude cohort check passed.")
+          EOF
+
+  manifest:
+    name: Manifest Consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate manifest.yaml
+        run: |
+          pip install pyyaml -q
+          python3 - << 'EOF'
+          import yaml, pathlib, sys
+
+          errors = []
+          manifest = yaml.safe_load(pathlib.Path("manifest.yaml").read_text())
+
+          REQUIRED_SPOKE_FIELDS = ["repo", "install_target", "install_source"]
+          for name, cfg in manifest.get("spokes", {}).items():
+            for field in REQUIRED_SPOKE_FIELDS:
+              if field not in cfg:
+                errors.append(f"spokes.{name}: missing required field '{field}'")
+
+          # Every pillar in memory/ should have an entry in manifest.yaml pillars
+          known_pillars = set(manifest.get("pillars", {}).keys())
+          memory = pathlib.Path("memory")
+          for category in memory.iterdir():
+            if not category.is_dir() or category.name == "shared":
+              continue
+            for pillar in category.iterdir():
+              if pillar.is_dir() and pillar.name not in known_pillars:
+                errors.append(f"manifest.yaml: pillar '{pillar.name}' exists in memory/ but has no entry in pillars:")
+
+          if errors:
+            for e in errors:
+              print(f"ERROR: {e}")
+            sys.exit(1)
+          print("Manifest checks passed.")
+          EOF

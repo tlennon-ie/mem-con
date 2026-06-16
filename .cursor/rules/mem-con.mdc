@@ -1,0 +1,19 @@
+---
+description: mem-con context rules for Cursor
+alwaysApply: true
+---
+
+# mem-con — Cursor Context Rules
+
+At session start:
+1. Read `user-profile.yaml` (or `~/.memcon/user-profile.yaml`) — get name, role, contexts, environment
+2. Read `.memcon-context` — get active context id. If missing, ask user which context to use.
+3. Load `memory/shared/` then `memory/{path}/` for the active context
+4. Check `environment.mcps` before using any MCP tool
+
+Workflow: Discover → Define → Build → Review → Capture
+Build artifact format adapts to user's role (PM→spec, Engineer→design doc, Marketer→brief, Support→runbook, etc.)
+
+Never write to memory files without explicit user approval.
+Always gate at each phase before proceeding.
+Degrade gracefully when MCPs are unavailable.

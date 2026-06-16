@@ -1,0 +1,88 @@
+# .github/workflows/validate-memory.yml
+name: Validate Memory Files
+
+on:
+  pull_request:
+    paths:
+      - 'memory/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required frontmatter fields
+        run: |
+          python3 - << 'EOF'
+          import re, sys, pathlib
+
+          REQUIRED_FIELDS = ["name", "description", "metadata"]
+          REQUIRED_META   = ["type", "pillar", "last_updated"]
+          VALID_TYPES     = {"user", "project", "feedback", "reference", "index"}
+
+          errors = []
+          changed = pathlib.Path("memory").rglob("*.md")
+
+          for f in changed:
+            if f.name == "README.md":
+              continue
+            text = f.read_text(encoding="utf-8-sig")
+            # Extract YAML frontmatter
+            match = re.match(r'^---\n(.*?)\n---', text, re.DOTALL)
+            if not match:
+              errors.append(f"{f}: missing frontmatter block")
+              continue
+
+            fm = match.group(1)
+
+            for field in REQUIRED_FIELDS:
+              if f"{field}:" not in fm:
+                errors.append(f"{f}: missing required field '{field}'")
+
+            # Check metadata sub-fields
+            for mf in REQUIRED_META:
+              if f"  {mf}:" not in fm:
+                errors.append(f"{f}: missing metadata.{mf}")
+
+            # Check type is valid
+            type_match = re.search(r'  type:\s*(\S+)', fm)
+            if type_match and type_match.group(1) not in VALID_TYPES:
+              errors.append(f"{f}: invalid type '{type_match.group(1)}' — must be one of {VALID_TYPES}")
+
+          if errors:
+            for e in errors:
+              print(f"ERROR: {e}")
+            sys.exit(1)
+          else:
+            print(f"All memory files valid.")
+          EOF
+
+      - name: Check pillar directory structure
+        run: |
+          python3 - << 'EOF'
+          import pathlib, sys
+
+          REQUIRED_FILES = {"MEMORY.md", "user.md", "project.md", "feedback.md", "reference.md"}
+          errors = []
+
+          # Each leaf directory under memory/ (excluding shared/) must have exactly these 5 files
+          memory = pathlib.Path("memory")
+          for category in memory.iterdir():
+            if not category.is_dir() or category.name == "shared":
+              continue
+            for pillar in category.iterdir():
+              if not pillar.is_dir() or pillar.name.endswith(".md"):
+                continue
+              files = {f.name for f in pillar.iterdir()}
+              missing = REQUIRED_FILES - files
+              if missing:
+                errors.append(f"{pillar}: missing required files: {missing}")
+
+          if errors:
+            for e in errors:
+              print(f"ERROR: {e}")
+            sys.exit(1)
+          else:
+            print("All pillar directories have required files.")
+          EOF

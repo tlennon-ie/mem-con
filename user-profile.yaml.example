@@ -1,0 +1,111 @@
+# user-profile.yaml — your personal context config
+# Copy this to user-profile.yaml and customize. Do NOT commit user-profile.yaml.
+# Run /configure-sources to generate this automatically instead of editing by hand.
+
+name: "Your Name"
+email: "you@company.com"
+
+environment:
+  # Which AI client you're using
+  client: claude-code   # claude-code | claude-desktop | vscode | cursor |
+                        # jetbrains | codex | antigravity | gemini-cli | windsurf
+
+  # MCP servers you have configured (auto-detected by /configure-sources)
+  mcps:
+    - id: slack
+      commands: [read_channel, search, read_canvas, read_thread, send_message]
+    # - id: google-drive
+    #   commands: [list_files, get_file, search_files, download_file]
+    # - id: gmail
+    #   commands: [search, get_message, list_threads]
+    # - id: jira
+    #   commands: [search_issues, get_issue, create_issue]
+    # - id: notion
+    #   commands: [search, retrieve_page, query_database]
+    # - id: sana
+    #   commands: [get_meeting, list_meetings, query]
+    # - id: pipedream
+    #   commands: [slack_v2, google_drive, notion, zoom]
+    # - id: notebooklm
+    #   commands: [notebook_query, source_add]
+
+  # Slash commands / skills you have installed
+  skills:
+    - populate-context
+    - sync-memory
+    - configure-sources
+
+  # Agent types available in your client
+  agents:
+    - Explore
+    - Plan
+
+  ide_extensions: []
+
+# Your named contexts — one per role, team, or project
+contexts:
+  - id: my-primary                     # unique id for this context
+    name: "Engineering / Backend"      # human-readable label
+    role: "Senior Engineer"            # your role in this context
+    repo: "https://github.com/your-org/mem-con.git"
+    path: "engineering/backend"        # team-slug/area-slug within that repo
+
+    sources:
+      # Reference a shared team template (defined in team.yaml source_templates)
+      # - template: team-jira-sprint
+
+      # Slack channel
+      - id: team-channel
+        type: slack-channel
+        mcp: slack
+        requires: [slack.read_channel]
+        config:
+          channel: "#engineering"
+          lookback_days: 14
+        feeds_into: project.md
+
+      # Jira JQL filter
+      # - id: my-tickets
+      #   type: jira-jql
+      #   mcp: jira
+      #   requires: [jira.search_issues]
+      #   config:
+      #     jql: "assignee = currentUser() AND sprint in openSprints()"
+      #   feeds_into: project.md
+
+      # Google Drive folder
+      # - id: team-drive
+      #   type: google-drive
+      #   mcp: google-drive
+      #   requires: [google-drive.list_files]
+      #   config:
+      #     folder_id: "your-folder-id-here"
+      #     file_types: [doc, sheet]
+      #   feeds_into: reference.md
+
+      # Custom: any MCP + free-form instruction
+      # - id: custom-source
+      #   type: custom
+      #   mcp: linear
+      #   requires: [linear.list_issues]
+      #   description: "My Linear issues in progress"
+      #   query: "assigned to me, status In Progress, updated last 14 days"
+      #   feeds_into: project.md
+
+  # A second context pointing to a different repo entirely
+  # - id: project-alpha
+  #   name: "Project Alpha"
+  #   role: "Lead"
+  #   repo: "https://github.com/your-org/project-alpha-context.git"
+  #   path: "shared"
+  #   sources:
+  #     - id: alpha-channel
+  #       type: slack-channel
+  #       mcp: slack
+  #       requires: [slack.read_channel]
+  #       config:
+  #         channel: "#project-alpha"
+  #         lookback_days: 30
+  #       feeds_into: project.md
+
+default_context: my-primary

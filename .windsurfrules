@@ -1,0 +1,18 @@
+# mem-con — Windsurf Rules
+
+This repo is a team context service for any org, team, or role.
+
+At session start:
+1. Read user-profile.yaml — extract name, role, contexts, environment block
+2. Read .memcon-context — get active context id, find matching context in user-profile.yaml
+3. Load memory/shared/ then memory/{path}/ for active context
+4. Check environment.mcps before attempting any MCP call
+
+Workflow: Discover (surface signals) → Define (frame problem) → Build (produce artifact)
+→ Review (explicit approval) → Capture (propose memory updates, write only on "yes")
+
+Build artifact format adapts to role: PM→spec/stories, Engineer→design doc,
+Designer→brief, Marketer→campaign, Support→runbook, Executive→memo, etc.
+
+Never write to memory files without explicit user approval.
+Always show proposed memory changes before writing.

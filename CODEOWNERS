@@ -1,0 +1,13 @@
+# CODEOWNERS — mem-con
+# Routes PRs to memory/{team}/{area}/ to the primary contact for that area.
+# Update when team members change.
+
+# Global fallback
+*                   @your-org/mem-con-admins
+
+# Shared context — admin review
+memory/shared/      @your-org/mem-con-admins
+
+# Team areas — add one line per area, pointing to the area owner
+# memory/engineering/backend/   @github-username
+# memory/product/delivery/      @github-username

@@ -1,0 +1,30 @@
+# mem-con manifest — area seeding status
+# Updated by populate-context skill on approval
+
+areas:
+  platform: {seeded: false, team: engineering}
+  frontend: {seeded: false, team: engineering}
+  backend: {seeded: false, team: engineering}
+  devops: {seeded: false, team: engineering}
+  discovery: {seeded: false, team: product}
+  delivery: {seeded: false, team: product}
+  analytics: {seeded: false, team: product}
+  ux-research: {seeded: false, team: design}
+  product-design: {seeded: false, team: design}
+  design-system: {seeded: false, team: design}
+  content: {seeded: false, team: marketing}
+  demand-gen: {seeded: false, team: marketing}
+  brand: {seeded: false, team: marketing}
+  enterprise: {seeded: false, team: sales}
+  smb: {seeded: false, team: sales}
+  onboarding: {seeded: false, team: customer-success}
+  support: {seeded: false, team: customer-success}
+  renewals: {seeded: false, team: customer-success}
+  strategy: {seeded: false, team: executive}
+  finance: {seeded: false, team: executive}
+  recruiting: {seeded: false, team: hr}
+  culture: {seeded: false, team: hr}
+  docs: {seeded: false, team: tech-writing}
+  release-notes: {seeded: false, team: tech-writing}
+
+shared: {seeded: false}

@@ -1,0 +1,160 @@
+---
+description: How to populate unseeded areas with context from configured sources
+globs: memory/**/reference.md
+alwaysApply: false
+---
+
+# Area Population Workflow
+
+Use this workflow when an area's memory files are empty stubs or missing content.
+An area is "unseeded" if `MEMORY.md` contains no summaries, or typed files have only placeholder text.
+
+## When to Use
+
+Trigger this workflow when:
+- A team member says "this area has no context yet"
+- You open an area's files and they are mostly blank
+- `MEMORY.md` shows all files as "not yet populated"
+
+## Step 1 — Discover Existing Sources
+
+Query available data sources for content about this area:
+
+1. **Sana** — search meeting notes for the area name and related terms
+2. **NotebookLM** — check if a notebook exists for this area or team
+3. **Project tracking** (Jira, Linear, GitHub Issues) — search for epics and stories
+4. **Communication** (Slack, Teams) — search channels relevant to this area
+5. **Docs** (Notion, Confluence, Google Drive) — find relevant pages or folders
+
+Note which sources are available and which returned useful content.
+If a source is unavailable, skip it and note it in your summary.
+
+## Step 2 — Draft Memory Files
+
+Using the discovered content, draft all 4 typed files:
+
+### `user.md` — draft format
+```markdown
+# User Context — {area}
+
+## Area Owner
+[Name and role — from configured sources, CODEOWNERS, or shared context]
+
+## Domain Knowledge
+[What the team member knows well about this area]
+
+## Preferences
+[How the user likes to work in this area]
+
+## Key Stakeholders
+[Eng lead, design, GTM, CS contacts]
+```
+
+### `project.md` — draft format
+```markdown
+# Project Context — {area}
+
+## Active Initiatives
+[Current in-flight work — from Jira epics or configured sources]
+
+## Recent Decisions
+[Key decisions made in the last quarter — from meeting notes]
+
+## Upcoming Deadlines
+[Dates and deliverables — from Jira or project.md in shared/]
+
+## Blockers
+[Known blockers or dependencies]
+```
+
+### `feedback.md` — draft format
+```markdown
+# Feedback & Agent Guidance — {area}
+
+## What Has Worked
+[Approaches that were effective in past sessions]
+
+## What Hasn't Worked
+[Approaches to avoid]
+
+## User Feedback Themes
+[Top themes from configured feedback sources]
+
+## Agent Notes
+[Guidance for future sessions in this area]
+```
+
+### `reference.md` — draft format
+```markdown
+# Reference — {area}
+
+## Jira Filters
+[Saved filters or JQL queries for this area]
+
+## Analytics Events
+[Key events to track — names and event IDs]
+
+## Queries
+[Useful data queries for this area]
+
+## Feature Flags
+[Feature flags related to this area]
+
+## Dashboards
+[Links to dashboards or reporting tools]
+
+## External Links
+[Issue trackers, design files, specs]
+```
+
+## Step 3 — Show Drafts to User
+
+Present all 4 drafted files to the user:
+
+```
+I've drafted memory files for {area} using:
+- [sources used]
+
+Here are the drafts:
+
+[paste each file content]
+
+Does this look accurate? What should I change before I write these?
+```
+
+## Step 4 — Revise and Write
+
+1. Make any changes the user requests
+2. Ask once more: "Ready to write these to memory/{path}/?"
+3. Only write after explicit user confirmation
+4. After writing, update `MEMORY.md` with one-line summaries of each file
+
+## Step 5 — Update MEMORY.md
+
+After writing all 4 files, update `MEMORY.md`:
+
+```markdown
+# Memory Index — {area}
+
+## user.md
+[one-line summary]
+
+## project.md
+[one-line summary]
+
+## feedback.md
+[one-line summary]
+
+## reference.md
+[one-line summary]
+
+Last populated: {date}
+Sources used: {list}
+```
+
+## Critical Rules
+
+- Never write draft content without user review
+- Note all sources used (so they can be verified or updated later)
+- If a source was unavailable, leave the relevant section blank with a note: `[not yet populated — source unavailable]`
+- Population is a one-time setup; normal session updates go through Phase 5 — Capture

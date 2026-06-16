@@ -1,0 +1,7 @@
+.memcon-pillar
+*.env
+.DS_Store
+
+# Personal context config — never commit
+user-profile.yaml
+.memcon-context
